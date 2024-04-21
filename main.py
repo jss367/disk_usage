@@ -2,12 +2,15 @@ import os
 
 def get_size(path="."):
     total = 0
-    with os.scandir(path) as it:
-        for entry in it:
-            if entry.is_file():
-                total += entry.stat().st_size
-            elif entry.is_dir():
-                total += get_size(entry.path)
+    try:
+        with os.scandir(path) as it:
+            for entry in it:
+                if entry.is_file():
+                    total += entry.stat().st_size
+                elif entry.is_dir():
+                    total += get_size(entry.path)
+    except PermissionError:
+        print(f"Skipping directory {path} due to insufficient permissions")
     return total
 
 
